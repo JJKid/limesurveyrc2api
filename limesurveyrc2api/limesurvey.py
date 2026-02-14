@@ -4,6 +4,7 @@ from collections import OrderedDict
 from limesurveyrc2api.exceptions import LimeSurveyError
 from limesurveyrc2api._survey import _Survey
 from limesurveyrc2api._token import _Token
+from limesurveyrc2api._question import _Question
 
 
 class LimeSurvey(object):
@@ -15,6 +16,7 @@ class LimeSurvey(object):
         self.session_key = None
         self.survey = _Survey(self)  # Setup and admin of surveys.
         self.token = _Token(self)    # Participants and their data.
+        self.question = _Question(self)    # Participants and their data.
 
     def open(self, password):
         """
@@ -41,6 +43,8 @@ class LimeSurvey(object):
         else:
             assert response_type is str
         self.session_key = response
+        print("Session Key", self.session_key)
+
 
     def query(self, method, params):
         """
@@ -64,6 +68,7 @@ class LimeSurvey(object):
         """
         if not self.session_key and not method == "get_session_key":
             raise LimeSurveyError(method, "No session open", params)
+
 
         # 1. Prepare the request data
         data = OrderedDict([
